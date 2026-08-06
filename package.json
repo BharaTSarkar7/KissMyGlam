@@ -1,0 +1,17 @@
+{
+  "name": "kissmyglam",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@9.4.2",
+  "devDependencies": {
+    "turbo": "^2.10.8"
+  }
+}
