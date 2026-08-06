@@ -1,0 +1,14 @@
+@theme {
+  --color-bg: #F6F2EA;
+  --color-bg-alt: #EFE8DC;
+  --color-ink: #1B1917;
+  --color-ink-soft: #6E6A62;
+  --color-line: #E1D9C9;
+  --color-accent: #B08968;
+  --color-white: #FFFFFF;
+  
+  --radius-card: 14px;
+  --radius-pill: 40px;
+  
+  --container-max-width: 1280px;
+}
