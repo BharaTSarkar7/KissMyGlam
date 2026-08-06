@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../../packages/ui";
 @import "@kissmyglam/config/theme.css";
 
 @layer base {
