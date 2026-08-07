@@ -49,7 +49,7 @@ export default async function ProductPage({
         <div className="flex flex-col gap-4">
           {product.images.length > 0 ? (
             <>
-              <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-bg-alt">
+              <div className="relative aspect-[4/5] w-full max-h-[80vh] rounded-[14px] overflow-hidden bg-bg-alt">
                 <Image
                   src={product.images[0].url}
                   alt={product.images[0].altText || product.name}
@@ -61,7 +61,7 @@ export default async function ProductPage({
               {product.images.length > 1 && (
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {product.images.slice(1).map((image) => (
-                    <div key={image.id} className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-bg-alt">
+                    <div key={image.id} className="relative aspect-[4/5] w-full rounded-[14px] overflow-hidden bg-bg-alt">
                       <Image
                         src={image.url}
                         alt={image.altText || product.name}
@@ -74,7 +74,7 @@ export default async function ProductPage({
               )}
             </>
           ) : (
-            <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-bg-alt flex items-center justify-center">
+            <div className="relative aspect-[4/5] w-full max-h-[80vh] rounded-[14px] overflow-hidden bg-bg-alt flex items-center justify-center">
               <span className="text-ink-soft">No image available</span>
             </div>
           )}

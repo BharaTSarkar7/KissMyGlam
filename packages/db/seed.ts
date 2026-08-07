@@ -140,7 +140,7 @@ async function main() {
       isFeatured: false,
       images: {
         create: [
-          { url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800&auto=format&fit=crop', altText: 'White Cotton T-Shirt', isPrimary: true },
+          { url: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop', altText: 'White Cotton T-Shirt', isPrimary: true },
         ],
       },
     },
@@ -231,7 +231,12 @@ async function main() {
   for (const product of products) {
     await prisma.product.upsert({
       where: { slug: product.slug },
-      update: {},
+      update: {
+        images: {
+          deleteMany: {},
+          create: product.images.create,
+        }
+      },
       create: product,
     });
   }

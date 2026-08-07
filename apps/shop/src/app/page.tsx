@@ -30,7 +30,7 @@ export default async function Home() {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[80vh] min-h-[600px] w-full bg-[#E5E0DA] flex items-center justify-center overflow-hidden">
-        <Image 
+        <Image
           src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop"
           alt="Hero Fashion"
           fill
@@ -57,9 +57,9 @@ export default async function Home() {
 
       {/* Shop By Category Section */}
       <section id="categories" className="py-20 px-6 max-w-7xl mx-auto w-full">
-        <SectionHeading 
-          title="Shop By Category" 
-          subtitle="Explore our carefully curated collections for every occasion." 
+        <SectionHeading
+          title="Shop By Category"
+          subtitle="Explore our carefully curated collections for every occasion."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
           {categories.map((category) => (
@@ -75,9 +75,9 @@ export default async function Home() {
 
       {/* Best Sellers Section */}
       <section className="py-20 px-6 max-w-7xl mx-auto w-full">
-        <SectionHeading 
-          title="Best Sellers" 
-          subtitle="Our most loved pieces, hand-picked for you." 
+        <SectionHeading
+          title="Best Sellers"
+          subtitle="Our most loved pieces, hand-picked for you."
         />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-12">
           {bestSellers.map((product) => (
