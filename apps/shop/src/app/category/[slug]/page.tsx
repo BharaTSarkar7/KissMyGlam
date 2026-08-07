@@ -23,13 +23,18 @@ export default async function CategoryPage({
     orderBy: { sortOrder: "asc" },
   });
 
-  const products = await prisma.product.findMany({
+  const rawProducts = await prisma.product.findMany({
     where: { categoryId: category.id, isActive: true },
     include: {
       subtype: { select: { slug: true } },
       images: { where: { isPrimary: true }, take: 1 },
     },
   });
+
+  const products = rawProducts.map((p) => ({
+    ...p,
+    price: p.price.toString(),
+  }));
 
   return (
     <main className="min-h-screen py-16 px-6 max-w-7xl mx-auto w-full">
