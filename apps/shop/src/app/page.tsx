@@ -1,103 +1,96 @@
+import { prisma } from "@kissmyglam/db";
+import { Button } from "@kissmyglam/ui/src/Button";
+import { SectionHeading } from "@kissmyglam/ui/src/SectionHeading";
+import { CategoryTile } from "@kissmyglam/ui/src/CategoryTile";
+import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
+import Link from "next/link";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+  const categories = await prisma.category.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
+
+  let bestSellers = await prisma.product.findMany({
+    where: { isFeatured: true, isActive: true },
+    include: { images: { where: { isPrimary: true }, take: 1 } },
+    take: 4,
+  });
+
+  if (bestSellers.length === 0) {
+    bestSellers = await prisma.product.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+      include: { images: { where: { isPrimary: true }, take: 1 } },
+      take: 4,
+    });
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+    <div className="flex flex-col">
+      {/* Hero Section */}
+      <section className="relative h-[80vh] min-h-[600px] w-full bg-[#E5E0DA] flex items-center justify-center overflow-hidden">
+        <Image 
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2000&auto=format&fit=crop"
+          alt="Hero Fashion"
+          fill
+          className="object-cover opacity-50 mix-blend-multiply"
           priority
         />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div className="relative z-10 text-center px-6 max-w-2xl mx-auto flex flex-col items-center">
+          <h1 className="font-serif text-5xl md:text-7xl font-bold text-ink mb-4 leading-tight">
+            Redefine Your Everyday Style
+          </h1>
+          <p className="font-sans text-lg text-ink-soft mb-8 max-w-md">
+            Discover the new collection. Premium materials, effortless silhouettes, and timeless designs for the modern wardrobe.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+            <Link href="/category/dresses" className="w-full sm:w-auto">
+              <Button variant="primary" className="w-full sm:w-auto">Shop The Sale</Button>
+            </Link>
+            <Link href="#categories" className="w-full sm:w-auto">
+              <Button variant="outline" className="w-full sm:w-auto">View All Categories</Button>
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Shop By Category Section */}
+      <section id="categories" className="py-20 px-6 max-w-7xl mx-auto w-full">
+        <SectionHeading 
+          title="Shop By Category" 
+          subtitle="Explore our carefully curated collections for every occasion." 
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+          {categories.map((category) => (
+            <CategoryTile
+              key={category.id}
+              name={category.name}
+              slug={category.slug}
+              imageUrl={category.imageUrl}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Best Sellers Section */}
+      <section className="py-20 px-6 max-w-7xl mx-auto w-full">
+        <SectionHeading 
+          title="Best Sellers" 
+          subtitle="Our most loved pieces, hand-picked for you." 
+        />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-12">
+          {bestSellers.map((product) => (
+            <ProductCard
+              key={product.id}
+              name={product.name}
+              price={`$${product.price.toString()}`}
+              slug={product.slug}
+              imageUrl={product.images[0]?.url || ''}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
