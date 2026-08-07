@@ -18,18 +18,19 @@ export default async function CategoryPage({
     notFound();
   }
 
-  const subtypes = await prisma.subtype.findMany({
-    where: { categoryId: category.id },
-    orderBy: { sortOrder: "asc" },
-  });
-
-  const rawProducts = await prisma.product.findMany({
-    where: { categoryId: category.id, isActive: true },
-    include: {
-      subtype: { select: { slug: true } },
-      images: { where: { isPrimary: true }, take: 1 },
-    },
-  });
+  const [subtypes, rawProducts] = await Promise.all([
+    prisma.subtype.findMany({
+      where: { categoryId: category.id },
+      orderBy: { sortOrder: "asc" },
+    }),
+    prisma.product.findMany({
+      where: { categoryId: category.id, isActive: true },
+      include: {
+        subtype: { select: { slug: true } },
+        images: { where: { isPrimary: true }, take: 1 },
+      },
+    })
+  ]);
 
   const products = rawProducts.map((p) => ({
     ...p,

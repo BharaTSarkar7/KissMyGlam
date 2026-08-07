@@ -7,15 +7,18 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default async function Home() {
-  const categories = await prisma.category.findMany({
-    orderBy: { sortOrder: "asc" },
-  });
+  const [categories, initialBestSellers] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: { sortOrder: "asc" },
+    }),
+    prisma.product.findMany({
+      where: { isFeatured: true, isActive: true },
+      include: { images: { where: { isPrimary: true }, take: 1 } },
+      take: 4,
+    })
+  ]);
 
-  let bestSellers = await prisma.product.findMany({
-    where: { isFeatured: true, isActive: true },
-    include: { images: { where: { isPrimary: true }, take: 1 } },
-    take: 4,
-  });
+  let bestSellers = initialBestSellers;
 
   if (bestSellers.length === 0) {
     bestSellers = await prisma.product.findMany({
