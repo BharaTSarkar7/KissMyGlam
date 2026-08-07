@@ -7,7 +7,7 @@ import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
 interface Product {
   id: string;
   name: string;
-  price: any;
+  price: string;
   slug: string;
   subtype: { slug: string } | null;
   images: { url: string }[];

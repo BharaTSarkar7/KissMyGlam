@@ -23,7 +23,7 @@ export default function StyleTestPage() {
       {/* Row 2 */}
       <section>
         <RowLabel>Section Heading</RowLabel>
-        <SectionHeading eyebrow="New Collection" title="Elevate Your Everyday Style" />
+        <SectionHeading subtitle="New Collection" title="Elevate Your Everyday Style" />
       </section>
 
       {/* Row 3 */}

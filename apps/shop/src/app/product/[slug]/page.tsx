@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { SectionHeading } from "@kissmyglam/ui/src/SectionHeading";
 import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
-import { Button } from "@kissmyglam/ui/src/Button";
 import Link from "next/link";
+import { ProductActions } from "./ProductActions";
 
 export default async function ProductPage({
   params,
@@ -98,39 +98,13 @@ export default async function ProductPage({
             <p>{product.description}</p>
           </div>
 
-          {/* Sizes */}
-          {product.sizes.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-sm font-medium uppercase tracking-wider text-ink mb-4">Size</h3>
-              <div className="flex gap-3 flex-wrap">
-                {product.sizes.map((size) => (
-                  <button key={size} className="w-12 h-12 flex items-center justify-center border border-ink/20 rounded-full text-sm font-medium text-ink hover:border-ink transition-colors">
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Colours */}
-          {product.colours.length > 0 && (
-            <div className="mb-10">
-              <h3 className="text-sm font-medium uppercase tracking-wider text-ink mb-4">Colour</h3>
-              <div className="flex gap-3 flex-wrap">
-                {product.colours.map((colour) => (
-                  <button key={colour} className="px-4 h-10 flex items-center justify-center border border-ink/20 rounded-full text-sm font-medium text-ink hover:border-ink transition-colors">
-                    {colour}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Buy on Instagram Placeholder */}
-          <div className="p-6 border-2 border-dashed border-ink/20 rounded-2xl bg-bg-alt flex flex-col items-center justify-center text-center gap-3">
-            <span className="text-sm font-medium text-ink-soft uppercase tracking-wider">[ Placeholder: Buy on Instagram Button ]</span>
-            <p className="text-xs text-ink-soft/70 max-w-[200px]">This area is reserved for the Instagram integration in Phase 4.</p>
-          </div>
+          <ProductActions 
+            name={product.name}
+            price={`$${product.price.toString()}`}
+            sizes={product.sizes}
+            colours={product.colours}
+            productUrl={`https://kissmyglam.com/product/${product.slug}`}
+          />
         </div>
       </section>
 
