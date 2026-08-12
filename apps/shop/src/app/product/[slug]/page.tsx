@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { SectionHeading } from "@kissmyglam/ui/src/SectionHeading";
 import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
+import { ProductImageGallery } from "@kissmyglam/ui/src/ProductImageGallery";
 import Link from "next/link";
 import { ProductActions } from "./ProductActions";
 
@@ -44,40 +45,9 @@ export default async function ProductPage({
     <main className="min-h-screen pb-20">
       {/* Product Details Section */}
       <section className="max-w-7xl mx-auto px-6 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-        
         {/* Image Gallery */}
-        <div className="flex flex-col gap-4">
-          {product.images.length > 0 ? (
-            <>
-              <div className="relative aspect-[4/5] w-full max-h-[80vh] rounded-[14px] overflow-hidden bg-bg-alt">
-                <Image
-                  src={product.images[0].url}
-                  alt={product.images[0].altText || product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-              {product.images.length > 1 && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {product.images.slice(1).map((image) => (
-                    <div key={image.id} className="relative aspect-[4/5] w-full rounded-[14px] overflow-hidden bg-bg-alt">
-                      <Image
-                        src={image.url}
-                        alt={image.altText || product.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="relative aspect-[4/5] w-full max-h-[80vh] rounded-[14px] overflow-hidden bg-bg-alt flex items-center justify-center">
-              <span className="text-ink-soft">No image available</span>
-            </div>
-          )}
+        <div className="w-full">
+          <ProductImageGallery images={product.images} productName={product.name} />
         </div>
 
         {/* Product Info */}
@@ -91,20 +61,27 @@ export default async function ProductPage({
             {product.name}
           </h1>
           <p className="font-sans text-xl text-ink mb-8">
-            ${product.price.toString()}
+            ₹{product.price.toString()} {product.isSold && <span className="font-bold ml-2">SOLD</span>}
           </p>
           
           <div className="prose prose-sm text-ink-soft mb-10 leading-relaxed">
             <p>{product.description}</p>
           </div>
 
-          <ProductActions 
-            name={product.name}
-            price={`$${product.price.toString()}`}
-            sizes={product.sizes}
-            colours={product.colours}
-            productUrl={`https://kissmyglam.com/product/${product.slug}`}
-          />
+          {product.isSold ? (
+            <div className="py-6 px-4 bg-bg-alt/50 rounded-[14px] border border-line text-center">
+              <span className="font-serif text-xl text-ink">Out of Stock</span>
+              <p className="text-sm text-ink-soft mt-1">This item has been sold.</p>
+            </div>
+          ) : (
+            <ProductActions 
+              name={product.name}
+              price={`₹${product.price.toString()}`}
+              sizes={product.sizes}
+              colours={product.colours}
+              productUrl={`https://kissmyglam.com/product/${product.slug}`}
+            />
+          )}
         </div>
       </section>
 
@@ -120,9 +97,10 @@ export default async function ProductPage({
               <ProductCard
                 key={related.id}
                 name={related.name}
-                price={`$${related.price.toString()}`}
+                price={`₹${related.price.toString()}`}
                 slug={related.slug}
                 imageUrl={related.images[0]?.url || ''}
+                isSold={related.isSold}
               />
             ))}
           </div>

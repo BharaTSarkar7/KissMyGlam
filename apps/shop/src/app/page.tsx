@@ -87,9 +87,10 @@ export default async function Home() {
             <ProductCard
               key={product.id}
               name={product.name}
-              price={`$${product.price.toString()}`}
+              price={`₹${product.price.toString()}`}
               slug={product.slug}
               imageUrl={product.images[0]?.url || ''}
+              isSold={product.isSold}
             />
           ))}
         </div>

@@ -8,9 +8,9 @@ import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 
 // Initialize Supabase client with Service Role Key (Server-only)
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const bucketName = process.env.SUPABASE_STORAGE_BUCKET || "product-images";
+const supabaseUrl = process.env.SUPABASE_URL?.trim()!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()!;
+const bucketName = process.env.SUPABASE_STORAGE_BUCKET?.trim().replace(/^"|"$/g, '') || "product-images";
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
@@ -108,6 +108,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
           colours: validated.colours,
           isFeatured: validated.isFeatured,
           isActive: validated.isActive,
+          isSold: validated.isSold,
         },
       });
 
@@ -130,6 +131,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
           colours: validated.colours,
           isFeatured: validated.isFeatured,
           isActive: validated.isActive,
+          isSold: validated.isSold,
         },
       });
       productId = newProduct.id;

@@ -59,7 +59,7 @@ export default function StyleTestPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <ProductCard
             name="Linen Blend Blazer"
-            price="$89.99"
+            price="₹89.99"
             slug="linen-blend-blazer"
             imageUrl="https://images.unsplash.com/photo-1591369822096-ffd140ec948f?q=80&w=800&auto=format&fit=crop"
           />

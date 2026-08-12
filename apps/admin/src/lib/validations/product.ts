@@ -17,6 +17,7 @@ export const productSchema = z.object({
   colours: z.array(z.string()).default([]),
   isFeatured: z.boolean().default(false),
   isActive: z.boolean().default(true),
+  isSold: z.boolean().default(false),
   images: z
     .array(
       z.object({

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
+import { Header } from "@kissmyglam/ui/src/Header";
+import { prisma } from "@kissmyglam/db";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -18,14 +20,19 @@ export const metadata: Metadata = {
   description: "Elevate Your Everyday Style",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const categories = await prisma.category.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${fraunces.variable} font-sans antialiased`}>
+      <body suppressHydrationWarning className={`${inter.variable} ${fraunces.variable} font-sans antialiased bg-bg`}>
+        <Header categories={categories} />
         {children}
       </body>
     </html>

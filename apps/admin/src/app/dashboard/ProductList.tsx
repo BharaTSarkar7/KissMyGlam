@@ -13,6 +13,7 @@ type Product = {
   slug: string;
   price: number;
   isActive: boolean;
+  isSold: boolean;
   category: { name: string };
   subtype: { name: string } | null;
   images: { url: string }[];
@@ -108,11 +109,18 @@ export function ProductList({ products }: { products: Product[] }) {
                     {product.category.name}
                     {product.subtype && <span className="text-xs ml-1 opacity-70">({product.subtype.name})</span>}
                   </td>
-                  <td className="p-4 text-sm text-ink">${product.price.toString()}</td>
+                  <td className="p-4 text-sm text-ink">₹{product.price.toString()}</td>
                   <td className="p-4">
-                    <span className={`text-xs px-2 py-1 rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {product.isActive ? 'Active' : 'Inactive'}
-                    </span>
+                    <div className="flex gap-2">
+                      <span className={`text-xs px-2 py-1 rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {product.isActive ? 'Active' : 'Inactive'}
+                      </span>
+                      {product.isSold && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-800">
+                          Sold
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="p-4 text-right">
                     <div className="flex items-center justify-end gap-2">

@@ -40,6 +40,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
   const [colours, setColours] = useState<string[]>(initialData?.colours || []);
   const [isFeatured, setIsFeatured] = useState(initialData?.isFeatured || false);
   const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
+  const [isSold, setIsSold] = useState(initialData?.isSold ?? false);
   const [images, setImages] = useState<ProductFormValues["images"]>(initialData?.images || []);
 
   // Tag inputs state
@@ -155,6 +156,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
       colours,
       isFeatured,
       isActive,
+      isSold,
       images,
     };
 
@@ -390,6 +392,15 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
               className="w-4 h-4 text-ink rounded border-line focus:ring-ink"
             />
             <span className="text-sm font-medium text-ink">Featured (Shows on homepage)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isSold}
+              onChange={(e) => setIsSold(e.target.checked)}
+              className="w-4 h-4 text-ink rounded border-line focus:ring-ink"
+            />
+            <span className="text-sm font-medium text-ink">Sold / Out of Stock</span>
           </label>
         </div>
       </div>

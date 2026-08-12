@@ -10,9 +10,10 @@ interface ProductCardProps {
   price: string;
   imageUrl: string;
   slug: string;
+  isSold?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl, slug }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl, slug, isSold }) => {
   return (
     <Link href={`/product/${slug}`} className="group block w-full">
       <div className="relative aspect-[1/1.2] rounded-[14px] overflow-hidden bg-bg-alt mb-3">
@@ -20,8 +21,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ name, price, imageUrl,
           src={imageUrl}
           alt={name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className={`object-cover transition-transform duration-700 group-hover:scale-105 ${isSold ? 'blur-[2px] opacity-80' : ''}`}
         />
+        {isSold && (
+          <div className="absolute inset-0 bg-white/30 flex items-center justify-center pointer-events-none">
+            <span className="font-sans font-bold text-2xl tracking-widest text-ink shadow-sm bg-white/80 px-4 py-2 rounded">
+              SOLD
+            </span>
+          </div>
+        )}
         <button
           className="absolute top-3 right-3 p-1.5 bg-white shadow-sm rounded-full text-ink hover:scale-110 transition-transform cursor-pointer border-none outline-none"
           onClick={(e) => e.preventDefault()}
