@@ -4,17 +4,20 @@
   "private": true,
   "main": "./index.ts",
   "dependencies": {
-    "@prisma/client": "^5.21.0"
+    "@prisma/client": "^5.21.0",
+    "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
     "prisma": "^5.21.0",
     "tsx": "^4.19.0",
     "typescript": "^5.0.0",
-    "@types/node": "^22.0.0"
+    "@types/node": "^22.0.0",
+    "@types/bcryptjs": "^2.4.6"
   },
   "scripts": {
     "generate": "prisma generate",
-    "push": "prisma db push"
+    "push": "prisma db push",
+    "create-admin": "tsx create-admin.ts"
   },
   "prisma": {
     "seed": "tsx seed.ts"
