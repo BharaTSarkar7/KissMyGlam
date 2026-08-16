@@ -15,8 +15,8 @@ export function LoginForm() {
     ) => {
       const result = await loginAction(prevState, formData);
       if (result === null) {
-        // Login successful — redirect to dashboard
-        router.push("/dashboard");
+        // Login successful — redirect to inventory
+        router.push("/inventory");
         return null;
       }
       return result;

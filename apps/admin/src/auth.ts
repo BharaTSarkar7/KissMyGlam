@@ -89,7 +89,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const protectedPaths = ["/dashboard", "/products", "/categories"];
+      const protectedPaths = ["/inventory", "/products", "/analytics"];
       const isProtected = protectedPaths.some((path) =>
         nextUrl.pathname.startsWith(path)
       );
@@ -98,9 +98,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return Response.redirect(new URL("/login", nextUrl));
       }
 
-      // If logged in and visiting /login, redirect to dashboard
+      // If logged in and visiting /login, redirect to inventory
       if (isLoggedIn && nextUrl.pathname === "/login") {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+        return Response.redirect(new URL("/inventory", nextUrl));
       }
 
       return true;

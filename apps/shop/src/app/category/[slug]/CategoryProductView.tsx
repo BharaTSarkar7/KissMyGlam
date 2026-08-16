@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
 
@@ -9,6 +9,7 @@ interface Product {
   name: string;
   price: string;
   slug: string;
+  isSold: boolean;
   subtype: { slug: string } | null;
   images: { url: string }[];
 }
@@ -40,9 +41,11 @@ export const CategoryProductView: React.FC<CategoryProductViewProps> = ({ produc
   
   const currentSubtype = searchParams.get("subtype");
 
-  // Shuffle products only once on mount (client-side) as requested by user
-  const shuffledProducts = useMemo(() => {
-    return shuffleArray(products);
+  // Shuffle products only on client-side to prevent hydration mismatch
+  const [shuffledProducts, setShuffledProducts] = useState<Product[]>(products);
+
+  useEffect(() => {
+    setShuffledProducts(shuffleArray(products));
   }, [products]);
 
   const filteredProducts = useMemo(() => {
