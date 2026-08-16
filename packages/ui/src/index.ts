@@ -5,5 +5,6 @@ export * from "./ProductCard";
 export * from "./BuyOnInstagramButton";
 export * from "./Header";
 export * from "./HeaderLogo";
+export * from "./HeaderSearch";
 export * from "./ProductImageGallery";
 export * from "./ProductDetailsAccordion";

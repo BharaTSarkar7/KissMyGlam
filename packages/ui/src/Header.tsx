@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
 import { HeaderLogo } from "./HeaderLogo";
+import { HeaderSearch } from "./HeaderSearch";
 
 interface Category {
   id: string;
@@ -10,9 +10,10 @@ interface Category {
 
 interface HeaderProps {
   categories?: Category[];
+  onLiveSearch?: (query: string) => Promise<any[]>;
 }
 
-export function Header({ categories = [] }: HeaderProps) {
+export function Header({ categories = [], onLiveSearch }: HeaderProps) {
   return (
     <header className="w-full py-6 px-6 max-w-7xl mx-auto flex items-center justify-between">
       <div className="flex items-center gap-8">
@@ -32,9 +33,7 @@ export function Header({ categories = [] }: HeaderProps) {
         )}
       </div>
       <div>
-        <button aria-label="Search" className="text-ink hover:opacity-70 transition-opacity">
-          <Search className="w-5 h-5" />
-        </button>
+        <HeaderSearch onLiveSearch={onLiveSearch} />
       </div>
     </header>
   );
