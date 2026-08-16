@@ -38,7 +38,7 @@ export function ProductList({ products }: { products: Product[] }) {
       } else {
         params.delete("q");
       }
-      router.push(`/dashboard?${params.toString()}`);
+      router.push(`/products?${params.toString()}`);
     });
   };
 
@@ -63,7 +63,7 @@ export function ProductList({ products }: { products: Product[] }) {
           placeholder="Search products by name..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full sm:max-w-sm px-4 py-2 border border-line rounded-[14px] bg-bg focus:outline-none focus:ring-1 focus:ring-ink"
+          className="w-full sm:max-w-sm px-4 py-2 border border-line rounded-[14px] bg-white focus:outline-none focus:ring-1 focus:ring-ink"
         />
         <Link href="/products/new">
           <Button variant="primary">Add Product</Button>
