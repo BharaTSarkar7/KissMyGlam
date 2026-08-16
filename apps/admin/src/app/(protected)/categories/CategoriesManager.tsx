@@ -149,7 +149,7 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
         </div>
       </div>
       <div className="flex gap-2 justify-end mt-2">
-        <Button variant="outline" type="button" onClick={() => setEditingCategory(null)} disabled={isPending}>Cancel</Button>
+        <Button variant="ghost" type="button" onClick={() => setEditingCategory(null)} disabled={isPending}>Cancel</Button>
         <Button variant="primary" type="submit" disabled={isPending}>Save Category</Button>
       </div>
     </form>
@@ -190,7 +190,7 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
           />
         </div>
         <div className="flex gap-2 items-end justify-end h-full pt-4">
-          <Button variant="outline" type="button" onClick={() => setEditingSubtype(null)} disabled={isPending}>Cancel</Button>
+          <Button variant="ghost" type="button" onClick={() => setEditingSubtype(null)} disabled={isPending}>Cancel</Button>
           <Button variant="primary" type="submit" disabled={isPending}>Save</Button>
         </div>
       </div>
@@ -281,7 +281,7 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
                     <div className="flex justify-between items-center mb-4">
                       <h4 className="text-sm font-medium text-ink-soft uppercase tracking-wider">Subtypes</h4>
                       {editingSubtype?.categoryId !== cat.id && (
-                        <Button variant="outline" size="sm" onClick={() => setEditingSubtype({ categoryId: cat.id, sortOrder: 0 })} disabled={isPending}>
+                        <Button variant="ghost" size="sm" onClick={() => setEditingSubtype({ categoryId: cat.id, sortOrder: 0 })} disabled={isPending}>
                           <Plus className="w-3 h-3 mr-1" /> Add Subtype
                         </Button>
                       )}
