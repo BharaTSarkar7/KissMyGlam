@@ -6,7 +6,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
           <h1 className="font-serif text-4xl font-medium text-ink mb-2">
-            KissMyGlam
+            Kiss<span className="text-[#fd5f88]">My</span>Glam
           </h1>
           <p className="text-ink-soft text-sm uppercase tracking-widest font-medium">
             Admin Panel

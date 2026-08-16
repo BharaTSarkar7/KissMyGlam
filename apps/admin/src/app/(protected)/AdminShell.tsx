@@ -22,7 +22,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-bg flex flex-col md:flex-row">
       {/* Mobile Top Bar */}
       <header className="md:hidden flex items-center justify-between p-4 bg-white border-b border-line shadow-sm z-50">
-        <Link href="/inventory" className="font-serif font-medium text-xl text-ink">KissMyGlam</Link>
+        <Link href="/inventory" className="font-serif font-medium text-xl text-ink">Kiss<span className="text-[#fd5f88]">My</span>Glam</Link>
         <div className="flex items-center gap-4">
           <form action={logoutAction}>
             <button type="submit" className="text-ink-soft hover:text-ink">
@@ -60,7 +60,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 bg-white border-r border-line flex-col h-screen sticky top-0">
         <div className="p-8">
-          <h1 className="font-serif text-2xl font-medium text-ink">KissMyGlam</h1>
+          <h1 className="font-serif text-2xl font-medium text-ink">Kiss<span className="text-[#fd5f88]">My</span>Glam</h1>
           <p className="text-xs text-ink-soft uppercase tracking-widest mt-1">Admin Panel</p>
         </div>
         
