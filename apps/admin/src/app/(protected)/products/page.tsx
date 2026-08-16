@@ -4,26 +4,40 @@ import { ProductList } from "./ProductList";
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; category?: string }>;
 }) {
-  const { q } = await searchParams;
+  const { q, category } = await searchParams;
 
-  const products = await prisma.product.findMany({
-    where: q
-      ? {
-          name: {
-            contains: q,
-            mode: "insensitive",
-          },
-        }
-      : undefined,
-    orderBy: { createdAt: "desc" },
-    include: {
-      category: { select: { name: true } },
-      subtype: { select: { name: true } },
-      images: { where: { isPrimary: true }, take: 1, select: { url: true } },
-    },
-  });
+  const whereClause: Record<string, any> = {};
+  if (q) {
+    whereClause.name = {
+      contains: q,
+      mode: "insensitive",
+    };
+  }
+  if (category) {
+    whereClause.category = {
+      slug: category,
+    };
+  }
+
+  const [products, activeCategory] = await Promise.all([
+    prisma.product.findMany({
+      where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
+      orderBy: { createdAt: "desc" },
+      include: {
+        category: { select: { name: true, slug: true } },
+        subtype: { select: { name: true } },
+        images: { where: { isPrimary: true }, take: 1, select: { url: true } },
+      },
+    }),
+    category
+      ? prisma.category.findUnique({
+          where: { slug: category },
+          select: { name: true, slug: true },
+        })
+      : null,
+  ]);
 
   const formattedProducts = products.map((p) => ({
     ...p,
@@ -41,7 +55,10 @@ export default async function ProductsPage({
         </p>
       </div>
 
-      <ProductList products={formattedProducts} />
+      <ProductList
+        products={formattedProducts}
+        activeCategory={activeCategory}
+      />
     </div>
   );
 }

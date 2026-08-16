@@ -19,7 +19,13 @@ type Product = {
   images: { url: string }[];
 };
 
-export function ProductList({ products }: { products: Product[] }) {
+export function ProductList({
+  products,
+  activeCategory,
+}: {
+  products: Product[];
+  activeCategory?: { name: string; slug: string } | null;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
@@ -42,6 +48,14 @@ export function ProductList({ products }: { products: Product[] }) {
     });
   };
 
+  const handleClearCategory = () => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams);
+      params.delete("category");
+      router.push(`/products?${params.toString()}`);
+    });
+  };
+
   const handleDelete = async (id: string, name: string) => {
     if (window.confirm(`Are you sure you want to soft-delete "${name}"? It will be hidden from the public shop.`)) {
       startTransition(async () => {
@@ -56,15 +70,30 @@ export function ProductList({ products }: { products: Product[] }) {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search products by name..."
-          value={searchTerm}
-          onChange={handleSearch}
-          className="w-full sm:max-w-sm px-4 py-2 border-none shadow-sm rounded-[14px] bg-white focus:outline-none"
-        />
+    <div className="w-full space-y-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <input
+            type="text"
+            placeholder="Search products by name..."
+            value={searchTerm}
+            onChange={handleSearch}
+            className="w-full sm:w-72 px-4 py-2 border-none shadow-sm rounded-[14px] bg-white focus:outline-none"
+          />
+          {activeCategory && (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-ink text-white text-xs font-medium shadow-sm">
+              <span>Category: {activeCategory.name}</span>
+              <button
+                type="button"
+                onClick={handleClearCategory}
+                className="hover:text-red-300 transition-colors ml-1 font-bold text-sm leading-none"
+                title="Clear category filter"
+              >
+                ×
+              </button>
+            </div>
+          )}
+        </div>
         <Link href="/products/new">
           <Button variant="primary">Add Product</Button>
         </Link>
