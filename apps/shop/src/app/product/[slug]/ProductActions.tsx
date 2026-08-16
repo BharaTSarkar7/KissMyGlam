@@ -29,6 +29,15 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
 
   const currentSizeMeasurements = selectedSize ? sizeDetails[selectedSize] || [] : [];
 
+  const formatMeasurementValue = (val: string): string => {
+    if (!val) return "";
+    const trimmed = val.trim();
+    if (/(?:cm|in|inch|inches|mm|m)$/i.test(trimmed)) {
+      return trimmed;
+    }
+    return `${trimmed} cm`;
+  };
+
   return (
     <div className="flex flex-col">
       {/* Sizes */}
@@ -85,7 +94,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
                 {currentSizeMeasurements.map((m, idx) => (
                   <div key={idx}>
                     <p className="text-xs text-ink-soft mb-0.5">{m.label}</p>
-                    <p className="text-sm font-medium text-ink break-words">{m.value}</p>
+                    <p className="text-sm font-medium text-ink break-words">{formatMeasurementValue(m.value)}</p>
                   </div>
                 ))}
               </div>

@@ -473,7 +473,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
                             />
                             <input
                               type="text"
-                              placeholder="e.g. 34 in"
+                              placeholder="e.g. 88 (cm added auto)"
                               value={row.value}
                               onChange={(e) =>
                                 handleUpdateSizeDetailRow(size, idx, "value", e.target.value)
