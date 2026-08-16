@@ -100,7 +100,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
         data: {
           name: validated.name,
           slug: validated.slug,
-          description: validated.description,
+          details: validated.details,
           price: validated.price,
           categoryId: validated.categoryId,
           subtypeId: validated.subtypeId || null,
@@ -123,7 +123,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
         data: {
           name: validated.name,
           slug: validated.slug,
-          description: validated.description,
+          details: validated.details,
           price: validated.price,
           categoryId: validated.categoryId,
           subtypeId: validated.subtypeId || null,

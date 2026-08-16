@@ -32,7 +32,8 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
   // Form State
   const [name, setName] = useState(initialData?.name || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
-  const [description, setDescription] = useState(initialData?.description || "");
+  const [description] = useState(initialData?.description || "");
+  const [details, setDetails] = useState<{ label: string; value: string }[]>(initialData?.details || []);
   const [price, setPrice] = useState(initialData?.price || "");
   const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
   const [subtypeId, setSubtypeId] = useState(initialData?.subtypeId || "");
@@ -148,7 +149,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
     const payload: ProductFormValues = {
       name,
       slug,
-      description,
+      details: details.filter(d => d.label.trim() && d.value.trim()),
       price,
       categoryId,
       subtypeId: subtypeId || null,
@@ -205,15 +206,60 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-ink-soft mb-1">Description *</label>
-          <textarea
-            required
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-4 py-2 border border-line rounded-[14px] bg-bg focus:ring-1 focus:ring-ink"
-          />
+        {/* Product Details - Dynamic Label/Value List */}
+        <div className="space-y-4 pt-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-serif text-2xl text-ink">Product Details</h3>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setDetails([...details, { label: "", value: "" }])}
+            >
+              + Add Detail
+            </Button>
+          </div>
+          {details.length === 0 && (
+            <p className="text-sm text-ink-soft italic">No details added yet. Click "+ Add Detail" to begin.</p>
+          )}
+          {details.map((detail, idx) => (
+            <div key={idx} className="flex gap-3 items-start">
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-ink-soft mb-1">Label</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Fabric"
+                  value={detail.label}
+                  onChange={(e) => {
+                    const updated = [...details];
+                    updated[idx] = { ...updated[idx], label: e.target.value };
+                    setDetails(updated);
+                  }}
+                  className="w-full px-4 py-2 border border-line rounded-[14px] bg-bg focus:ring-1 focus:ring-ink text-sm"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-xs font-medium text-ink-soft mb-1">Value</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Cotton"
+                  value={detail.value}
+                  onChange={(e) => {
+                    const updated = [...details];
+                    updated[idx] = { ...updated[idx], value: e.target.value };
+                    setDetails(updated);
+                  }}
+                  className="w-full px-4 py-2 border border-line rounded-[14px] bg-bg focus:ring-1 focus:ring-ink text-sm"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setDetails(details.filter((_, i) => i !== idx))}
+                className="mt-6 p-2 text-ink-soft hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              >
+                ×
+              </button>
+            </div>
+          ))}
         </div>
 
         <div className="w-full md:w-1/2">

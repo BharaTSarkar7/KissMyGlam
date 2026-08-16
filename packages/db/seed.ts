@@ -98,7 +98,7 @@ async function main() {
     {
       name: 'Silk Midi Dress',
       slug: 'silk-midi-dress',
-      description: 'Elegant silk midi dress for evening wear.',
+      details: [{ label: "Description", value: "Elegant silk midi dress for evening wear." }],
       price: 129.00,
       categoryId: categoryDresses.id,
       subtypeId: getSubtypeId(categoryDresses, 'midi'),
@@ -114,7 +114,7 @@ async function main() {
     {
       name: 'Floral Mini Dress',
       slug: 'floral-mini-dress',
-      description: 'Cute floral mini dress perfect for summer.',
+      details: [{ label: "Description", value: "Cute floral mini dress perfect for summer." }],
       price: 65.00,
       categoryId: categoryDresses.id,
       subtypeId: getSubtypeId(categoryDresses, 'mini'),
@@ -131,7 +131,7 @@ async function main() {
     {
       name: 'Cotton Basic T-Shirt',
       slug: 'cotton-basic-t-shirt',
-      description: 'Comfortable everyday cotton tee.',
+      details: [{ label: "Description", value: "Comfortable everyday cotton tee." }],
       price: 25.00,
       categoryId: categoryTops.id,
       subtypeId: getSubtypeId(categoryTops, 't-shirts'),
@@ -147,7 +147,7 @@ async function main() {
     {
       name: 'Linen Wrap Blouse',
       slug: 'linen-wrap-blouse',
-      description: 'Breathable linen wrap blouse for a chic look.',
+      details: [{ label: "Description", value: "Breathable linen wrap blouse for a chic look." }],
       price: 55.00,
       categoryId: categoryTops.id,
       subtypeId: getSubtypeId(categoryTops, 'blouses'),
@@ -164,7 +164,7 @@ async function main() {
     {
       name: 'High-Waisted Wide Leg Jeans',
       slug: 'high-waisted-wide-leg-jeans',
-      description: 'Trendy high-waisted jeans with a comfortable wide leg.',
+      details: [{ label: "Description", value: "Trendy high-waisted jeans with a comfortable wide leg." }],
       price: 85.00,
       categoryId: categoryBottomwear.id,
       subtypeId: getSubtypeId(categoryBottomwear, 'jeans'),
@@ -180,7 +180,7 @@ async function main() {
     {
       name: 'Tailored Linen Trousers',
       slug: 'tailored-linen-trousers',
-      description: 'Smart and lightweight tailored trousers.',
+      details: [{ label: "Description", value: "Smart and lightweight tailored trousers." }],
       price: 75.50,
       categoryId: categoryBottomwear.id,
       subtypeId: getSubtypeId(categoryBottomwear, 'trousers'),
@@ -197,7 +197,7 @@ async function main() {
     {
       name: 'Oversized Wool Coat',
       slug: 'oversized-wool-coat',
-      description: 'Keep warm in style with this oversized wool blend coat.',
+      details: [{ label: "Description", value: "Keep warm in style with this oversized wool blend coat." }],
       price: 199.00,
       categoryId: categoryWinterwear.id,
       subtypeId: getSubtypeId(categoryWinterwear, 'coats'),
@@ -213,7 +213,7 @@ async function main() {
     {
       name: 'Chunky Knit Cardigan',
       slug: 'chunky-knit-cardigan',
-      description: 'Cozy up with this hand-knitted chunky cardigan.',
+      details: [{ label: "Description", value: "Cozy up with this hand-knitted chunky cardigan." }],
       price: 110.00,
       categoryId: categoryWinterwear.id,
       subtypeId: getSubtypeId(categoryWinterwear, 'cardigans'),

@@ -281,7 +281,7 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
                     <div className="flex justify-between items-center mb-4">
                       <h4 className="text-sm font-medium text-ink-soft uppercase tracking-wider">Subtypes</h4>
                       {editingSubtype?.categoryId !== cat.id && (
-                        <Button variant="ghost" size="sm" onClick={() => setEditingSubtype({ categoryId: cat.id, sortOrder: 0 })} disabled={isPending}>
+                        <Button variant="ghost" onClick={() => setEditingSubtype({ categoryId: cat.id, sortOrder: 0 })} disabled={isPending}>
                           <Plus className="w-3 h-3 mr-1" /> Add Subtype
                         </Button>
                       )}

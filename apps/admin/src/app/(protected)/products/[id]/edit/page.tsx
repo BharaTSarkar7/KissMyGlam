@@ -39,7 +39,7 @@ export default async function EditProductPage({
     id: product.id,
     name: product.name,
     slug: product.slug,
-    description: product.description,
+    details: (product.details as { label: string; value: string }[]) || [],
     price: product.price.toString(),
     categoryId: product.categoryId,
     subtypeId: product.subtypeId || undefined,

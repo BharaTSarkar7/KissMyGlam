@@ -4,6 +4,7 @@ import Image from "next/image";
 import { SectionHeading } from "@kissmyglam/ui/src/SectionHeading";
 import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
 import { ProductImageGallery } from "@kissmyglam/ui/src/ProductImageGallery";
+import { ProductDetailsAccordion } from "@kissmyglam/ui/src/ProductDetailsAccordion";
 import Link from "next/link";
 import { ProductActions } from "./ProductActions";
 
@@ -64,8 +65,9 @@ export default async function ProductPage({
             ₹{product.price.toString()} {product.isSold && <span className="font-bold ml-2">SOLD</span>}
           </p>
           
-          <div className="prose prose-sm text-ink-soft mb-10 leading-relaxed">
-            <p>{product.description}</p>
+          {/* Product Details Accordion */}
+          <div className="mb-10">
+            <ProductDetailsAccordion details={(product.details as { label: string; value: string }[]) || []} />
           </div>
 
           {product.isSold ? (

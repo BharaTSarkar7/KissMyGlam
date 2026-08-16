@@ -6,7 +6,11 @@ export const productSchema = z.object({
     .string()
     .min(1, "Slug is required")
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Invalid slug format"),
-  description: z.string().min(1, "Description is required"),
+  description: z.string().optional(), // DEPRECATED — kept for backward compat but unused
+  details: z.array(z.object({
+    label: z.string().min(1, "Label is required"),
+    value: z.string().min(1, "Value is required"),
+  })).default([]),
   price: z
     .string()
     .min(1, "Price is required")
