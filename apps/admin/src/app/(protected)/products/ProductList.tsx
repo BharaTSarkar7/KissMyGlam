@@ -36,6 +36,8 @@ export function ProductList({
   const [isPending, startTransition] = useTransition();
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+  const [softDeleteTarget, setSoftDeleteTarget] = useState<Product | null>(null);
+  const [softDeleteError, setSoftDeleteError] = useState<string | null>(null);
   const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<Product | null>(null);
   const [confirmNameInput, setConfirmNameInput] = useState("");
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -64,17 +66,19 @@ export function ProductList({
     });
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to soft-delete "${name}"? It will be hidden from the public shop.`)) {
-      startTransition(async () => {
-        try {
-          await deleteProduct(id);
-        } catch (error) {
-          console.error("Failed to delete product", error);
-          alert("Failed to delete product.");
-        }
-      });
-    }
+  const handleConfirmSoftDelete = async () => {
+    if (!softDeleteTarget) return;
+
+    startTransition(async () => {
+      try {
+        await deleteProduct(softDeleteTarget.id);
+        setSoftDeleteTarget(null);
+        setSoftDeleteError(null);
+      } catch (error: any) {
+        console.error("Failed to delete product", error);
+        setSoftDeleteError(error.message || "Failed to delete product.");
+      }
+    });
   };
 
   const handleConfirmPermanentDelete = async () => {
@@ -185,7 +189,10 @@ export function ProductList({
                         <Button 
                           variant="ghost" 
                           className="!px-3 !py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(product.id, product.name)}
+                          onClick={() => {
+                            setSoftDeleteTarget(product);
+                            setSoftDeleteError(null);
+                          }}
                           disabled={isPending}
                         >
                           Delete
@@ -212,6 +219,57 @@ export function ProductList({
           </tbody>
         </table>
       </div>
+
+      {/* Soft Delete Modal */}
+      {softDeleteTarget && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[24px] max-w-lg w-full p-6 shadow-xl border border-line/60 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="space-y-2">
+              <h3 className="font-serif text-2xl font-medium text-ink">
+                Deactivate Product
+              </h3>
+              <p className="text-sm text-ink-soft leading-relaxed">
+                Are you sure you want to soft-delete <strong className="text-ink font-semibold">"{softDeleteTarget.name}"</strong>? It will be marked Inactive and hidden from the public shop.
+              </p>
+            </div>
+
+            {softDeleteError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-medium">
+                {softDeleteError}
+              </div>
+            )}
+
+            <div className="p-4 bg-bg-alt/70 border border-line/50 rounded-xl text-xs text-ink-soft space-y-1">
+              <p>
+                ℹ️ You can still view this item in the admin list or permanently delete it later once it is Inactive.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setSoftDeleteTarget(null);
+                  setSoftDeleteError(null);
+                }}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                className="!bg-red-600 hover:!bg-red-700 disabled:!opacity-40"
+                onClick={handleConfirmSoftDelete}
+                disabled={isPending}
+              >
+                {isPending ? "Deactivating..." : "Deactivate Product"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Typed Confirmation Modal for Permanent Delete */}
       {permanentDeleteTarget && (
