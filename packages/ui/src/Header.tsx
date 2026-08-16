@@ -16,7 +16,7 @@ export function Header({ categories = [] }: HeaderProps) {
     <header className="w-full py-6 px-6 max-w-7xl mx-auto flex items-center justify-between">
       <div className="flex items-center gap-8">
         <Link href="/" className="font-sans font-bold tracking-[0.2em] text-ink uppercase text-sm">
-          Kiss<span className="text-[#fd5f88] font-bold">My</span>Glam
+          Kiss<span className="text-[#fd5f88]">My</span>Glam
         </Link>
         {categories.length > 0 && (
           <nav className="hidden md:flex items-center gap-6">
