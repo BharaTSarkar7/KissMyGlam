@@ -55,7 +55,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             {sizes.map((size) => (
               <button 
                 key={size} 
-                onClick={() => setSelectedSize(size)}
+                onClick={() => setSelectedSize((prev) => (prev === size ? "" : size))}
                 className={`w-12 h-12 flex items-center justify-center border rounded-full text-sm font-medium transition-colors ${
                   selectedSize === size
                     ? "bg-ink border-ink text-white"
@@ -111,7 +111,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({
             {colours.map((colour) => (
               <button 
                 key={colour} 
-                onClick={() => setSelectedColour(colour)}
+                onClick={() => setSelectedColour((prev) => (prev === colour ? "" : colour))}
                 className={`px-4 h-10 flex items-center justify-center border rounded-full text-sm font-medium transition-colors ${
                   selectedColour === colour
                     ? "bg-ink border-ink text-white"

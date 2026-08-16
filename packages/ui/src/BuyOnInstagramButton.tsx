@@ -47,10 +47,22 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(summaryText);
         setCopyStatus("copied");
-        // Show brief toast
         setTimeout(() => setCopyStatus("idle"), 3000);
       } else {
-        throw new Error("Clipboard API not available");
+        // Fallback for non-HTTPS/LAN testing
+        const textArea = document.createElement("textarea");
+        textArea.value = summaryText;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand("copy");
+        textArea.remove();
+        if (!successful) throw new Error("Fallback copy failed");
+        setCopyStatus("copied");
+        setTimeout(() => setCopyStatus("idle"), 3000);
       }
     } catch (err) {
       console.warn("Failed to copy to clipboard automatically", err);
