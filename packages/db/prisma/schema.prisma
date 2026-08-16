@@ -43,6 +43,7 @@ model Product {
   isFeatured  Boolean        @default(false)
   isActive    Boolean        @default(true)
   isSold      Boolean        @default(false)
+  saleRecord  SaleRecord?
   images      ProductImage[]
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
@@ -70,4 +71,31 @@ model AdminUser {
 enum Role {
   OWNER
   EDITOR
+}
+
+model SaleRecord {
+  id           String        @id @default(uuid())
+  productId    String        @unique
+  product      Product       @relation(fields: [productId], references: [id])
+  productName  String
+  imageUrl     String
+  dateInStock  DateTime      @default(now())
+  boughtFor    Decimal?
+  dateSold     DateTime?
+  soldFor      Decimal?
+  payment      PaymentStatus @default(UNPAID)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+}
+
+model AdminSettings {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
 }

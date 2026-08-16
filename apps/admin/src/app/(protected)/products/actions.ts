@@ -149,6 +149,27 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
         })),
       });
     }
+
+    // Auto-create/update SaleRecord if isSold is true
+    if (productId && validated.isSold) {
+      const primaryImage = validated.images.find((img) => img.isPrimary) || validated.images[0];
+      const imageUrl = primaryImage?.url || "";
+
+      await tx.saleRecord.upsert({
+        where: { productId },
+        update: {
+          productName: validated.name,
+          imageUrl: imageUrl,
+        },
+        create: {
+          productId,
+          productName: validated.name,
+          imageUrl: imageUrl,
+          dateSold: new Date(),
+          payment: "UNPAID",
+        },
+      });
+    }
   });
 
   revalidatePath("/dashboard");
