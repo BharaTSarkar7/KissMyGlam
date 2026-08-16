@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@kissmyglam/db";
 import bcrypt from "bcryptjs";
+import { authConfig } from "./auth.config";
 
 declare module "next-auth" {
   interface User {
@@ -18,6 +19,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -37,8 +39,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { email },
         });
 
-        // Return null for both "user not found" and "wrong password"
-        // to avoid leaking which emails exist in the system
         if (!user) {
           return null;
         }
@@ -63,56 +63,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-
   session: { strategy: "jwt" },
-
-  pages: {
-    signIn: "/login",
-  },
-
-  callbacks: {
-    async jwt({ token, user }) {
-      // On initial sign-in, persist role and id into the JWT
-      if (user) {
-        token.role = user.role;
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      // Attach role and id to the session user object
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
-    async authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const protectedPaths = [
-        "/inventory",
-        "/products",
-        "/analytics",
-        "/categories",
-        "/dashboard",
-      ];
-      const isProtected = protectedPaths.some((path) =>
-        nextUrl.pathname.startsWith(path)
-      );
-
-      if (isProtected && !isLoggedIn) {
-        return Response.redirect(new URL("/login", nextUrl));
-      }
-
-      // If logged in and visiting /login, redirect to inventory
-      if (isLoggedIn && nextUrl.pathname === "/login") {
-        return Response.redirect(new URL("/inventory", nextUrl));
-      }
-
-      return true;
-    },
-  },
-
-  // Auth.js defaults: httpOnly, secure (in production), SameSite=Lax
-  // Do NOT override these to anything less strict.
 });
