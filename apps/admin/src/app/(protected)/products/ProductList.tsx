@@ -73,13 +73,13 @@ export function ProductList({ products }: { products: Product[] }) {
       <div className="overflow-x-auto bg-white rounded-[24px] shadow-sm border border-line/50">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-line bg-bg-alt/50">
-              <th className="p-4 font-medium text-sm text-ink-soft">Image</th>
-              <th className="p-4 font-medium text-sm text-ink-soft">Name</th>
-              <th className="p-4 font-medium text-sm text-ink-soft">Category</th>
-              <th className="p-4 font-medium text-sm text-ink-soft">Price</th>
-              <th className="p-4 font-medium text-sm text-ink-soft">Status</th>
-              <th className="p-4 font-medium text-sm text-ink-soft text-right">Actions</th>
+            <tr className="bg-ink text-white border-b-0">
+              <th className="p-4 font-medium text-sm text-white/90">Image</th>
+              <th className="p-4 font-medium text-sm text-white/90">Name</th>
+              <th className="p-4 font-medium text-sm text-white/90">Category</th>
+              <th className="p-4 font-medium text-sm text-white/90">Price</th>
+              <th className="p-4 font-medium text-sm text-white/90">Status</th>
+              <th className="p-4 font-medium text-sm text-white/90 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
