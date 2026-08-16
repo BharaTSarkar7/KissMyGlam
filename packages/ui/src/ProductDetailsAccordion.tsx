@@ -66,11 +66,11 @@ export function ProductDetailsAccordion({ details }: ProductDetailsAccordionProp
           isOpen ? "max-h-[2000px] opacity-100 pb-6" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-5 px-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-1">
           {details.map((detail, idx) => (
             <div key={idx}>
               <p className="text-xs text-ink-soft mb-1">{detail.label}</p>
-              <p className="text-sm font-medium text-ink">{detail.value}</p>
+              <p className="text-sm font-medium text-ink break-words">{detail.value}</p>
             </div>
           ))}
         </div>
