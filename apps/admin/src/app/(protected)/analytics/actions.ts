@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "@kissmyglam/db";
 import { revalidatePath } from "next/cache";
 
-export async function updateSaleRecord(id: string, data: { boughtFor?: number | null; soldFor?: number | null; dateSold?: string | null; payment?: "PAID" | "UNPAID" }) {
+export async function updateSaleRecord(id: string, data: { boughtFor?: number | null; soldFor?: number | null; dateSold?: string | null; dateInStock?: string | null; payment?: "PAID" | "UNPAID" }) {
   const session = await auth();
   if (!session?.user) throw new Error("Unauthorized");
 
@@ -13,7 +13,8 @@ export async function updateSaleRecord(id: string, data: { boughtFor?: number | 
     data: {
       boughtFor: data.boughtFor,
       soldFor: data.soldFor,
-      dateSold: data.dateSold ? new Date(data.dateSold) : null,
+      dateSold: data.dateSold ? new Date(data.dateSold) : data.dateSold === null ? null : undefined,
+      dateInStock: data.dateInStock ? new Date(data.dateInStock) : data.dateInStock === null ? null : undefined,
       payment: data.payment,
     },
   });

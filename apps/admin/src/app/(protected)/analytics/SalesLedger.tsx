@@ -126,8 +126,13 @@ export function SalesLedger({
                         </div>
                         <span className="font-medium text-sm text-ink max-w-[150px] truncate" title={r.productName}>{r.productName}</span>
                       </td>
-                      <td className="p-4 text-sm text-ink-soft">
-                        {r.dateInStock ? new Date(r.dateInStock).toLocaleDateString() : "-"}
+                      <td className="p-4">
+                        <input
+                          type="date"
+                          defaultValue={r.dateInStock ? new Date(r.dateInStock).toISOString().split('T')[0] : ""}
+                          onBlur={(e) => handleRecordChange(r.id, "dateInStock", e.target.value || null)}
+                          className="bg-transparent border-b border-transparent focus:border-ink focus:outline-none text-sm text-ink w-full min-w-[120px]"
+                        />
                       </td>
                       <td className="p-4">
                         <div className="flex items-center">
