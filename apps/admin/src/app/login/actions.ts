@@ -8,17 +8,26 @@ import {
   clearRateLimit,
 } from "@/lib/rate-limit";
 import { AuthError } from "next-auth";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+});
 
 export async function loginAction(
   _prevState: { error?: string; retryAfter?: number } | null,
   formData: FormData
 ): Promise<{ error?: string; retryAfter?: number } | null> {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const rawEmail = formData.get("email");
+  const rawPassword = formData.get("password");
 
-  if (!email || !password) {
+  const parsed = loginSchema.safeParse({ email: rawEmail, password: rawPassword });
+  if (!parsed.success) {
     return { error: "invalid-credentials" };
   }
+
+  const { email, password } = parsed.data;
 
   // Get client IP for rate limiting
   const headersList = await headers();

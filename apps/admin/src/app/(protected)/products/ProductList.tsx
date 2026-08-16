@@ -74,9 +74,9 @@ export function ProductList({
         await deleteProduct(softDeleteTarget.id);
         setSoftDeleteTarget(null);
         setSoftDeleteError(null);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Failed to delete product", error);
-        setSoftDeleteError(error.message || "Failed to delete product.");
+        setSoftDeleteError(error instanceof Error ? error.message : "Failed to delete product.");
       }
     });
   };
@@ -91,9 +91,9 @@ export function ProductList({
         setPermanentDeleteTarget(null);
         setConfirmNameInput("");
         setDeleteError(null);
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Failed to permanently delete product", error);
-        setDeleteError(error.message || "Failed to permanently delete product.");
+        setDeleteError(error instanceof Error ? error.message : "Failed to permanently delete product.");
       }
     });
   };
@@ -229,7 +229,7 @@ export function ProductList({
                 Deactivate Product
               </h3>
               <p className="text-sm text-ink-soft leading-relaxed">
-                Are you sure you want to soft-delete <strong className="text-ink font-semibold">"{softDeleteTarget.name}"</strong>? It will be marked Inactive and hidden from the public shop.
+                Are you sure you want to soft-delete <strong className="text-ink font-semibold">&ldquo;{softDeleteTarget.name}&rdquo;</strong>? It will be marked Inactive and hidden from the public shop.
               </p>
             </div>
 
@@ -315,7 +315,7 @@ export function ProductList({
 
             <div className="space-y-2">
               <label className="block text-xs font-medium text-ink-soft">
-                To confirm, type <span className="font-bold text-ink select-all">"{permanentDeleteTarget.name}"</span> below:
+                To confirm, type <span className="font-bold text-ink select-all">&ldquo;{permanentDeleteTarget.name}&rdquo;</span> below:
               </label>
               <input
                 type="text"

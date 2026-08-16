@@ -5,12 +5,15 @@ import { prisma } from "@kissmyglam/db";
 import { createClient } from "@supabase/supabase-js";
 import { productSchema, ProductFormValues } from "@/lib/validations/product";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 import crypto from "crypto";
 
+const idSchema = z.string().min(1, "ID is required");
+
 // Initialize Supabase client with Service Role Key (Server-only)
-const supabaseUrl = process.env.SUPABASE_URL?.trim()!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()!;
-const bucketName = process.env.SUPABASE_STORAGE_BUCKET?.trim().replace(/^"|"$/g, '') || "product-images";
+const supabaseUrl = (process.env.SUPABASE_URL || "").trim();
+const supabaseServiceKey = (process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+const bucketName = (process.env.SUPABASE_STORAGE_BUCKET || "product-images").trim().replace(/^"|"$/g, '');
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey, {
   auth: {
@@ -188,8 +191,10 @@ export async function deleteProduct(id: string) {
     throw new Error("Unauthorized");
   }
 
+  const validatedId = idSchema.parse(id);
+
   await prisma.product.update({
-    where: { id },
+    where: { id: validatedId },
     data: { isActive: false },
   });
 
@@ -228,9 +233,11 @@ export async function permanentlyDeleteProduct(id: string) {
     throw new Error("Unauthorized");
   }
 
+  const validatedId = idSchema.parse(id);
+
   // 1. Fetch product with images and saleRecord
   const product = await prisma.product.findUnique({
-    where: { id },
+    where: { id: validatedId },
     include: {
       images: true,
       saleRecord: true,
@@ -269,17 +276,17 @@ export async function permanentlyDeleteProduct(id: string) {
   await prisma.$transaction(async (tx) => {
     // Delete SaleRecord if exists
     await tx.saleRecord.deleteMany({
-      where: { productId: id },
+      where: { productId: validatedId },
     });
 
     // Delete ProductImage records
     await tx.productImage.deleteMany({
-      where: { productId: id },
+      where: { productId: validatedId },
     });
 
     // Delete Product record
     await tx.product.delete({
-      where: { id },
+      where: { id: validatedId },
     });
   });
 

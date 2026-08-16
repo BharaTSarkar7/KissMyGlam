@@ -32,7 +32,6 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
   // Form State
   const [name, setName] = useState(initialData?.name || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
-  const [description] = useState(initialData?.description || "");
   const [details, setDetails] = useState<{ label: string; value: string }[]>(initialData?.details || []);
   const [sizeDetails, setSizeDetails] = useState<Record<string, { label: string; value: string }[]>>(
     (initialData?.sizeDetails as Record<string, { label: string; value: string }[]>) || {}
@@ -269,7 +268,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
             </Button>
           </div>
           {details.length === 0 && (
-            <p className="text-sm text-ink-soft italic">No details added yet. Click "+ Add Detail" to begin.</p>
+            <p className="text-sm text-ink-soft italic">No details added yet. Click &quot;+ Add Detail&quot; to begin.</p>
           )}
           {details.map((detail, idx) => (
             <div key={idx} className="flex gap-3 items-start">

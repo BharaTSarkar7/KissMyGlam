@@ -89,7 +89,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const protectedPaths = ["/inventory", "/products", "/analytics"];
+      const protectedPaths = [
+        "/inventory",
+        "/products",
+        "/analytics",
+        "/categories",
+        "/dashboard",
+      ];
       const isProtected = protectedPaths.some((path) =>
         nextUrl.pathname.startsWith(path)
       );

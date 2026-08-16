@@ -78,7 +78,7 @@ export default async function SearchPage({
             No products found
           </h2>
           <p className="text-ink-soft text-sm">
-            We couldn't find any matches for "{cleanQuery}". Try checking for spelling mistakes or browse our categories below.
+            We couldn&apos;t find any matches for &ldquo;{cleanQuery}&rdquo;. Try checking for spelling mistakes or browse our categories below.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             {categories.map((cat) => (

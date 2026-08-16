@@ -1,6 +1,5 @@
 import { prisma } from "@kissmyglam/db";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { SectionHeading } from "@kissmyglam/ui/src/SectionHeading";
 import { ProductCard } from "@kissmyglam/ui/src/ProductCard";
 import { ProductImageGallery } from "@kissmyglam/ui/src/ProductImageGallery";

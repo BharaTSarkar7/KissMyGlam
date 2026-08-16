@@ -1,4 +1,4 @@
-import { prisma } from "@kissmyglam/db";
+import { prisma, Prisma } from "@kissmyglam/db";
 import { ProductList } from "./ProductList";
 
 export default async function ProductsPage({
@@ -8,7 +8,7 @@ export default async function ProductsPage({
 }) {
   const { q, category } = await searchParams;
 
-  const whereClause: Record<string, any> = {};
+  const whereClause: Prisma.ProductWhereInput = {};
   if (q) {
     whereClause.name = {
       contains: q,

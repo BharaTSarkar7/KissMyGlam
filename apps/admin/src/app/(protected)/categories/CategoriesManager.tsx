@@ -55,8 +55,8 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
           sortOrder: Number(editingCategory.sortOrder) || 0,
         }, editingCategory.id);
         setEditingCategory(null);
-      } catch (err: any) {
-        setError(err.message || "Failed to save category");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Failed to save category");
       }
     });
   };
@@ -67,8 +67,8 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
     startTransition(async () => {
       try {
         await deleteCategory(id);
-      } catch (err: any) {
-        setError(err.message || "Failed to delete category");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Failed to delete category");
       }
     });
   };
@@ -86,8 +86,8 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
           sortOrder: Number(editingSubtype.sortOrder) || 0,
         }, editingSubtype.id);
         setEditingSubtype(null);
-      } catch (err: any) {
-        setError(err.message || "Failed to save subtype");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Failed to save subtype");
       }
     });
   };
@@ -98,8 +98,8 @@ export function CategoriesManager({ initialCategories }: { initialCategories: Ca
     startTransition(async () => {
       try {
         await deleteSubtype(id);
-      } catch (err: any) {
-        setError(err.message || "Failed to delete subtype");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Failed to delete subtype");
       }
     });
   };

@@ -3,26 +3,29 @@
 import { useState, useTransition } from "react";
 import Image from "next/image";
 import { updateSaleRecord, updateTotalExpense } from "./actions";
+import { SaleRecordUpdateValues } from "@/lib/validations/analytics";
 
-type SaleRecord = {
+interface SaleRecordItem {
   id: string;
   productId: string;
   productName: string;
   imageUrl: string;
-  dateInStock: Date;
   boughtFor: number | null;
-  dateSold: Date | null;
   soldFor: number | null;
+  dateSold: Date | null;
+  dateInStock: Date | null;
   payment: "PAID" | "UNPAID";
-};
+}
 
-export function SalesLedger({ 
-  records, 
-  totalExpense 
-}: { 
-  records: SaleRecord[]; 
+interface SalesLedgerProps {
+  records: SaleRecordItem[];
   totalExpense: number;
-}) {
+}
+
+export const SalesLedger: React.FC<SalesLedgerProps> = ({
+  records,
+  totalExpense,
+}) => {
   const [, startTransition] = useTransition();
   const [expense, setExpense] = useState(totalExpense.toString());
 
@@ -44,9 +47,13 @@ export function SalesLedger({
     }
   };
 
-  const handleRecordChange = (id: string, field: string, value: any) => {
+  const handleRecordChange = (
+    id: string,
+    field: keyof SaleRecordUpdateValues,
+    value: SaleRecordUpdateValues[keyof SaleRecordUpdateValues]
+  ) => {
     startTransition(() => {
-      updateSaleRecord(id, { [field]: value });
+      updateSaleRecord(id, { [field]: value } as SaleRecordUpdateValues);
     });
   };
 

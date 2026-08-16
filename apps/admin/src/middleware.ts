@@ -6,6 +6,7 @@ export const config = {
     "/products/:path*",
     "/analytics/:path*",
     "/categories/:path*",
+    "/dashboard/:path*",
     "/login",
   ],
 };
