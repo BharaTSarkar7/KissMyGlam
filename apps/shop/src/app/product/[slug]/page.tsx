@@ -82,6 +82,7 @@ export default async function ProductPage({
               sizes={product.sizes}
               colours={product.colours}
               productUrl={`https://kissmyglam.com/product/${product.slug}`}
+              sizeDetails={(product.sizeDetails as Record<string, { label: string; value: string }[]>) || {}}
             />
           )}
         </div>

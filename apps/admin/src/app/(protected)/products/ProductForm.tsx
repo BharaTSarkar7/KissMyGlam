@@ -34,6 +34,9 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [description] = useState(initialData?.description || "");
   const [details, setDetails] = useState<{ label: string; value: string }[]>(initialData?.details || []);
+  const [sizeDetails, setSizeDetails] = useState<Record<string, { label: string; value: string }[]>>(
+    (initialData?.sizeDetails as Record<string, { label: string; value: string }[]>) || {}
+  );
   const [price, setPrice] = useState(initialData?.price || "");
   const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
   const [subtypeId, setSubtypeId] = useState(initialData?.subtypeId || "");
@@ -84,6 +87,42 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
     setList: React.Dispatch<React.SetStateAction<string[]>>
   ) => {
     setList(list.filter((t) => t !== tag));
+  };
+
+  const handleRemoveSizeTag = (sizeToRemove: string) => {
+    setSizes(sizes.filter((s) => s !== sizeToRemove));
+    setSizeDetails((prev) => {
+      const next = { ...prev };
+      delete next[sizeToRemove];
+      return next;
+    });
+  };
+
+  const handleAddSizeDetailRow = (size: string) => {
+    setSizeDetails((prev) => ({
+      ...prev,
+      [size]: [...(prev[size] || []), { label: "", value: "" }],
+    }));
+  };
+
+  const handleUpdateSizeDetailRow = (
+    size: string,
+    index: number,
+    field: "label" | "value",
+    val: string
+  ) => {
+    setSizeDetails((prev) => {
+      const list = [...(prev[size] || [])];
+      list[index] = { ...list[index], [field]: val };
+      return { ...prev, [size]: list };
+    });
+  };
+
+  const handleRemoveSizeDetailRow = (size: string, index: number) => {
+    setSizeDetails((prev) => {
+      const list = (prev[size] || []).filter((_, i) => i !== index);
+      return { ...prev, [size]: list };
+    });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -146,10 +185,21 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
     e.preventDefault();
     setError(null);
 
+    const cleanedSizeDetails: Record<string, { label: string; value: string }[]> = {};
+    for (const s of sizes) {
+      const rows = (sizeDetails[s] || []).filter(
+        (r) => r.label.trim() && r.value.trim()
+      );
+      if (rows.length > 0) {
+        cleanedSizeDetails[s] = rows;
+      }
+    }
+
     const payload: ProductFormValues = {
       name,
       slug,
       details: details.filter(d => d.label.trim() && d.value.trim()),
+      sizeDetails: cleanedSizeDetails,
       price,
       categoryId,
       subtypeId: subtypeId || null,
@@ -334,9 +384,9 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
             </div>
             <div className="flex flex-wrap gap-2">
               {sizes.map((s) => (
-                <span key={s} className="px-3 py-1 bg-bg-alt rounded-full text-sm flex items-center gap-1">
+                <span key={s} className="px-3 py-1 bg-bg-alt rounded-full text-sm flex items-center gap-1 font-medium">
                   {s}
-                  <button type="button" onClick={() => handleRemoveTag(s, sizes, setSizes)} className="text-ink-soft hover:text-ink">×</button>
+                  <button type="button" onClick={() => handleRemoveSizeTag(s)} className="text-ink-soft hover:text-ink">×</button>
                 </span>
               ))}
             </div>
@@ -358,7 +408,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
             </div>
             <div className="flex flex-wrap gap-2">
               {colours.map((c) => (
-                <span key={c} className="px-3 py-1 bg-bg-alt rounded-full text-sm flex items-center gap-1">
+                <span key={c} className="px-3 py-1 bg-bg-alt rounded-full text-sm flex items-center gap-1 font-medium">
                   {c}
                   <button type="button" onClick={() => handleRemoveTag(c, colours, setColours)} className="text-ink-soft hover:text-ink">×</button>
                 </span>
@@ -366,6 +416,88 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Per-Size Measurements Section */}
+        {sizes.length > 0 && (
+          <div className="mt-6 pt-4 border-t border-line/40 space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-ink uppercase tracking-wider">
+                Per-Size Measurements
+              </h4>
+              <span className="text-xs text-ink-soft">
+                Optional measurements per size (e.g. Bust, Length, Waist)
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sizes.map((size) => {
+                const rows = sizeDetails[size] || [];
+                return (
+                  <div
+                    key={size}
+                    className="p-4 bg-bg-alt/40 rounded-[18px] border border-line/60 space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-ink flex items-center gap-2">
+                        <span className="w-6 h-6 rounded-full bg-ink text-white text-xs flex items-center justify-center font-sans font-medium">
+                          {size}
+                        </span>
+                        Size {size} Details
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="!py-1 !px-2.5 !text-xs"
+                        onClick={() => handleAddSizeDetailRow(size)}
+                      >
+                        + Add Detail
+                      </Button>
+                    </div>
+
+                    {rows.length === 0 ? (
+                      <p className="text-xs text-ink-soft italic">
+                        No measurements for size {size}.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {rows.map((row, idx) => (
+                          <div key={idx} className="flex gap-2 items-center">
+                            <input
+                              type="text"
+                              placeholder="e.g. Bust"
+                              value={row.label}
+                              onChange={(e) =>
+                                handleUpdateSizeDetailRow(size, idx, "label", e.target.value)
+                              }
+                              className="flex-1 px-3 py-1.5 border border-line rounded-[10px] bg-bg focus:ring-1 focus:ring-ink text-xs font-medium"
+                            />
+                            <input
+                              type="text"
+                              placeholder="e.g. 34 in"
+                              value={row.value}
+                              onChange={(e) =>
+                                handleUpdateSizeDetailRow(size, idx, "value", e.target.value)
+                              }
+                              className="flex-1 px-3 py-1.5 border border-line rounded-[10px] bg-bg focus:ring-1 focus:ring-ink text-xs"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveSizeDetailRow(size, idx)}
+                              className="p-1.5 text-ink-soft hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                              title="Remove measurement"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Images */}

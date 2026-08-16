@@ -40,6 +40,7 @@ export default async function EditProductPage({
     name: product.name,
     slug: product.slug,
     details: (product.details as { label: string; value: string }[]) || [],
+    sizeDetails: (product.sizeDetails as Record<string, { label: string; value: string }[]>) || {},
     price: product.price.toString(),
     categoryId: product.categoryId,
     subtypeId: product.subtypeId || undefined,

@@ -27,7 +27,7 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
     if (disabled) return;
     setIsModalOpen(true);
     setCopyStatus("idle");
-    
+
     // Build summary text
     let sizeText = "";
     if (selectedSize) {
@@ -56,7 +56,7 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
       console.warn("Failed to copy to clipboard automatically", err);
       setCopyStatus("failed");
       // Don't open window if they need to copy manually first
-      return; 
+      return;
     }
 
     // 2. Open Instagram if copy succeeded
@@ -74,13 +74,13 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
 
   return (
     <>
-      <Button 
-        variant="primary" 
-        onClick={handleOpen} 
+      <Button
+        variant="primary"
+        onClick={handleOpen}
         disabled={disabled}
         className="w-full"
       >
-        Buy on Instagram
+        DM on Instagram
       </Button>
 
       {isModalOpen && (
@@ -89,7 +89,7 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
             <h3 className="font-serif text-2xl font-medium text-ink mb-3 text-center">
               Almost there!
             </h3>
-            
+
             <p className="text-ink-soft text-center mb-6 leading-relaxed">
               You're about to leave KissMyGlam to open Instagram. We'll copy this product's details to your clipboard so you can paste them into the DM.
             </p>
@@ -103,8 +103,8 @@ export const BuyOnInstagramButton: React.FC<BuyOnInstagramButtonProps> = ({
             {copyStatus === "failed" && (
               <div className="mb-6 flex flex-col gap-2">
                 <p className="text-sm text-red-600 font-medium">Auto-copy failed. Please copy manually:</p>
-                <textarea 
-                  readOnly 
+                <textarea
+                  readOnly
                   value={summaryText}
                   className="w-full p-3 rounded-xl border border-ink/20 bg-bg-alt text-sm focus:outline-none focus:ring-2 focus:ring-ink"
                   rows={3}

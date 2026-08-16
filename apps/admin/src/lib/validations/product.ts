@@ -11,6 +11,15 @@ export const productSchema = z.object({
     label: z.string().min(1, "Label is required"),
     value: z.string().min(1, "Value is required"),
   })).default([]),
+  sizeDetails: z.record(
+    z.string(),
+    z.array(
+      z.object({
+        label: z.string().min(1, "Label is required"),
+        value: z.string().min(1, "Value is required"),
+      })
+    )
+  ).default({}),
   price: z
     .string()
     .min(1, "Price is required")
