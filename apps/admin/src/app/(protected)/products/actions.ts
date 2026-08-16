@@ -156,13 +156,13 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
       const imageUrl = primaryImage?.url || "";
 
       await tx.saleRecord.upsert({
-        where: { productId },
+        where: { productId: productId as string },
         update: {
           productName: validated.name,
           imageUrl: imageUrl,
         },
         create: {
-          productId,
+          productId: productId as string,
           productName: validated.name,
           imageUrl: imageUrl,
           dateSold: new Date(),

@@ -14,7 +14,7 @@ export async function updateSaleRecord(id: string, data: { boughtFor?: number | 
       boughtFor: data.boughtFor,
       soldFor: data.soldFor,
       dateSold: data.dateSold ? new Date(data.dateSold) : data.dateSold === null ? null : undefined,
-      dateInStock: data.dateInStock ? new Date(data.dateInStock) : data.dateInStock === null ? null : undefined,
+      dateInStock: data.dateInStock ? new Date(data.dateInStock) : undefined,
       payment: data.payment,
     },
   });
