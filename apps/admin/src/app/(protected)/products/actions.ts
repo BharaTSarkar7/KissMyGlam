@@ -192,5 +192,100 @@ export async function deleteProduct(id: string) {
   });
 
   revalidatePath("/dashboard");
+  revalidatePath("/products");
+  revalidatePath("/inventory");
+  return { success: true };
+}
+
+function extractStoragePath(url: string, bucket: string): string | null {
+  try {
+    if (!url) return null;
+    const marker = `/${bucket}/`;
+    if (url.includes(marker)) {
+      const parts = url.split(marker);
+      return decodeURIComponent(parts[1].split("?")[0]);
+    }
+    const urlObj = new URL(url);
+    const pathname = decodeURIComponent(urlObj.pathname);
+    if (pathname.includes(marker)) {
+      return pathname.substring(pathname.indexOf(marker) + marker.length);
+    }
+    return pathname.split("/").pop() || null;
+  } catch {
+    return url.replace(/^\/+/, "") || null;
+  }
+}
+
+/**
+ * Permanently deletes a product, its images from DB & Supabase Storage, and associated SaleRecord.
+ * Only allows deleting products that are currently inactive (isActive === false).
+ */
+export async function permanentlyDeleteProduct(id: string) {
+  const session = await auth();
+  if (!session?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  // 1. Fetch product with images and saleRecord
+  const product = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      images: true,
+      saleRecord: true,
+    },
+  });
+
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  // 2. Defense in depth check: only inactive products can be permanently deleted
+  if (product.isActive) {
+    throw new Error("Cannot permanently delete an active product. Please soft-delete it first.");
+  }
+
+  // 3. Attempt to delete image files from Supabase Storage (log errors without blocking DB deletion)
+  const storagePaths = product.images
+    .map((img) => extractStoragePath(img.url, bucketName))
+    .filter((path): path is string => Boolean(path));
+
+  if (storagePaths.length > 0) {
+    try {
+      const { error: storageError } = await supabase.storage
+        .from(bucketName)
+        .remove(storagePaths);
+
+      if (storageError) {
+        console.error("Failed to delete images from Supabase storage:", storageError);
+      }
+    } catch (err) {
+      console.error("Exception during Supabase storage image cleanup:", err);
+    }
+  }
+
+  // 4. Atomically delete database records in a transaction
+  await prisma.$transaction(async (tx) => {
+    // Delete SaleRecord if exists
+    await tx.saleRecord.deleteMany({
+      where: { productId: id },
+    });
+
+    // Delete ProductImage records
+    await tx.productImage.deleteMany({
+      where: { productId: id },
+    });
+
+    // Delete Product record
+    await tx.product.delete({
+      where: { id },
+    });
+  });
+
+  // 5. Revalidate cache paths
+  revalidatePath("/products");
+  revalidatePath("/inventory");
+  revalidatePath("/analytics");
+  revalidatePath("/dashboard");
+
   return { success: true };
 }

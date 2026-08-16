@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@kissmyglam/ui/src/Button";
-import { deleteProduct } from "../products/actions";
+import { deleteProduct, permanentlyDeleteProduct } from "../products/actions";
 
 type Product = {
   id: string;
@@ -17,6 +17,11 @@ type Product = {
   category: { name: string };
   subtype: { name: string } | null;
   images: { url: string }[];
+  saleRecord: {
+    payment: "PAID" | "UNPAID";
+    boughtFor: number | null;
+    soldFor: number | null;
+  } | null;
 };
 
 export function ProductList({
@@ -31,6 +36,9 @@ export function ProductList({
   const [isPending, startTransition] = useTransition();
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+  const [permanentDeleteTarget, setPermanentDeleteTarget] = useState<Product | null>(null);
+  const [confirmNameInput, setConfirmNameInput] = useState("");
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   // Debounced search
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,6 +75,23 @@ export function ProductList({
         }
       });
     }
+  };
+
+  const handleConfirmPermanentDelete = async () => {
+    if (!permanentDeleteTarget) return;
+    if (confirmNameInput.trim() !== permanentDeleteTarget.name.trim()) return;
+
+    startTransition(async () => {
+      try {
+        await permanentlyDeleteProduct(permanentDeleteTarget.id);
+        setPermanentDeleteTarget(null);
+        setConfirmNameInput("");
+        setDeleteError(null);
+      } catch (error: any) {
+        console.error("Failed to permanently delete product", error);
+        setDeleteError(error.message || "Failed to permanently delete product.");
+      }
+    });
   };
 
   return (
@@ -156,7 +181,7 @@ export function ProductList({
                       <Link href={`/products/${product.id}/edit`}>
                         <Button variant="ghost" className="!px-3 !py-1 text-xs">Edit</Button>
                       </Link>
-                      {product.isActive && (
+                      {product.isActive ? (
                         <Button 
                           variant="ghost" 
                           className="!px-3 !py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
@@ -164,6 +189,19 @@ export function ProductList({
                           disabled={isPending}
                         >
                           Delete
+                        </Button>
+                      ) : (
+                        <Button 
+                          variant="ghost" 
+                          className="!px-3 !py-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 font-medium whitespace-nowrap"
+                          onClick={() => {
+                            setPermanentDeleteTarget(product);
+                            setConfirmNameInput("");
+                            setDeleteError(null);
+                          }}
+                          disabled={isPending}
+                        >
+                          Permanently Delete
                         </Button>
                       )}
                     </div>
@@ -174,6 +212,92 @@ export function ProductList({
           </tbody>
         </table>
       </div>
+
+      {/* Typed Confirmation Modal for Permanent Delete */}
+      {permanentDeleteTarget && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-[24px] max-w-lg w-full p-6 shadow-xl border border-line/60 space-y-5">
+            <div className="space-y-2">
+              <h3 className="font-serif text-2xl font-medium text-red-600">
+                Permanently Delete Product
+              </h3>
+              <p className="text-sm text-ink-soft leading-relaxed">
+                This cannot be undone. The product, its images, and any sales record will be permanently deleted.
+              </p>
+            </div>
+
+            {deleteError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs font-medium">
+                {deleteError}
+              </div>
+            )}
+
+            {/* Extra Warning for Financial History */}
+            {permanentDeleteTarget.saleRecord &&
+              (permanentDeleteTarget.saleRecord.payment === "PAID" ||
+                permanentDeleteTarget.saleRecord.boughtFor !== null ||
+                permanentDeleteTarget.saleRecord.soldFor !== null) && (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-900 text-xs space-y-1">
+                  <div className="font-bold flex items-center gap-1 text-amber-800">
+                    ⚠️ Warning: Sales & Financial Records Attached
+                  </div>
+                  <p className="leading-relaxed">
+                    This product has sales/financial records attached (Status:{" "}
+                    <strong>{permanentDeleteTarget.saleRecord.payment}</strong>
+                    {permanentDeleteTarget.saleRecord.soldFor !== null && (
+                      <>, Sold: <strong>₹{permanentDeleteTarget.saleRecord.soldFor}</strong></>
+                    )}
+                    {permanentDeleteTarget.saleRecord.boughtFor !== null && (
+                      <>, Bought: <strong>₹{permanentDeleteTarget.saleRecord.boughtFor}</strong></>
+                    )}
+                    ). Permanently deleting it will also erase that history.
+                  </p>
+                </div>
+              )}
+
+            <div className="space-y-2">
+              <label className="block text-xs font-medium text-ink-soft">
+                To confirm, type <span className="font-bold text-ink select-all">"{permanentDeleteTarget.name}"</span> below:
+              </label>
+              <input
+                type="text"
+                value={confirmNameInput}
+                onChange={(e) => setConfirmNameInput(e.target.value)}
+                placeholder={permanentDeleteTarget.name}
+                className="w-full px-4 py-2 border border-line rounded-[14px] bg-bg focus:ring-1 focus:ring-red-500 text-sm font-medium text-ink"
+                autoFocus
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setPermanentDeleteTarget(null);
+                  setConfirmNameInput("");
+                  setDeleteError(null);
+                }}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="primary"
+                className="!bg-red-600 hover:!bg-red-700 disabled:!opacity-40"
+                onClick={handleConfirmPermanentDelete}
+                disabled={
+                  confirmNameInput.trim() !== permanentDeleteTarget.name.trim() ||
+                  isPending
+                }
+              >
+                {isPending ? "Deleting..." : "Permanently Delete"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

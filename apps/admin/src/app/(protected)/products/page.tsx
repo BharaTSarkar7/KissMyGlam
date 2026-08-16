@@ -29,6 +29,13 @@ export default async function ProductsPage({
         category: { select: { name: true, slug: true } },
         subtype: { select: { name: true } },
         images: { where: { isPrimary: true }, take: 1, select: { url: true } },
+        saleRecord: {
+          select: {
+            payment: true,
+            boughtFor: true,
+            soldFor: true,
+          },
+        },
       },
     }),
     category
@@ -42,6 +49,13 @@ export default async function ProductsPage({
   const formattedProducts = products.map((p) => ({
     ...p,
     price: Number(p.price),
+    saleRecord: p.saleRecord
+      ? {
+          payment: p.saleRecord.payment,
+          boughtFor: p.saleRecord.boughtFor ? Number(p.saleRecord.boughtFor) : null,
+          soldFor: p.saleRecord.soldFor ? Number(p.saleRecord.soldFor) : null,
+        }
+      : null,
   }));
 
   return (
