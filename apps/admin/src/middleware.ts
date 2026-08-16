@@ -5,6 +5,7 @@ export const config = {
     "/inventory/:path*",
     "/products/:path*",
     "/analytics/:path*",
+    "/categories/:path*",
     "/login",
   ],
 };

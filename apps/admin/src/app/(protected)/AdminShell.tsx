@@ -3,13 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Package, LayoutDashboard, BarChart3, LogOut, Menu, X } from "lucide-react";
+import { Package, LayoutDashboard, BarChart3, LogOut, Menu, X, Tags } from "lucide-react";
 import { Button } from "@kissmyglam/ui/src/Button";
 import { logoutAction } from "@/app/actions/auth";
 
 const navItems = [
   { name: "Inventory", href: "/inventory", icon: Package },
   { name: "Products", href: "/products", icon: LayoutDashboard },
+  { name: "Categories", href: "/categories", icon: Tags },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
 ];
 
