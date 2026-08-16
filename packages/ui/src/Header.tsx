@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { HeaderLogo } from "./HeaderLogo";
 
 interface Category {
   id: string;
@@ -15,9 +16,7 @@ export function Header({ categories = [] }: HeaderProps) {
   return (
     <header className="w-full py-6 px-6 max-w-7xl mx-auto flex items-center justify-between">
       <div className="flex items-center gap-8">
-        <Link href="/" className="font-sans font-bold tracking-[0.2em] text-ink uppercase text-sm">
-          Kiss<span className="text-[#fd5f88]">My</span>Glam
-        </Link>
+        <HeaderLogo />
         {categories.length > 0 && (
           <nav className="hidden md:flex items-center gap-6">
             {categories.map((cat) => (
