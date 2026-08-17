@@ -37,7 +37,7 @@ export async function loginAction(
     "unknown";
 
   // Check rate limit
-  const rateCheck = checkRateLimit(ip);
+  const rateCheck = await checkRateLimit(ip);
   if (!rateCheck.allowed) {
     return {
       error: "too-many-attempts",
@@ -53,12 +53,12 @@ export async function loginAction(
     });
 
     // Success — clear rate limit for this IP
-    clearRateLimit(ip);
+    await clearRateLimit(ip);
     return null;
   } catch (error) {
     if (error instanceof AuthError) {
       // Record the failed attempt
-      recordFailedAttempt(ip);
+      await recordFailedAttempt(ip);
       return { error: "invalid-credentials" };
     }
     throw error;

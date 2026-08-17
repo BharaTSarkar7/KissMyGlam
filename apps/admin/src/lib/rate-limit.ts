@@ -1,51 +1,63 @@
-// TODO: replace with Upstash Ratelimit or similar shared store before deploying
-// to serverless — in-memory state does not persist reliably across serverless
-// function instances. This is a dev-appropriate placeholder only.
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-interface RateLimitEntry {
-  count: number;
-  resetTime: number;
+const isProd = process.env.NODE_ENV === "production";
+const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
+const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+if (isProd && (!redisUrl || !redisToken)) {
+  throw new Error(
+    "UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are required in production for rate limiting."
+  );
 }
 
-const MAX_ATTEMPTS = 5;
-const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+let ratelimit: Ratelimit | null = null;
 
-const attempts = new Map<string, RateLimitEntry>();
+if (redisUrl && redisToken) {
+  const redis = new Redis({
+    url: redisUrl,
+    token: redisToken,
+  });
 
-export function checkRateLimit(ip: string): {
+  ratelimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    analytics: true,
+    prefix: "kmg:ratelimit:login",
+  });
+}
+
+export async function checkRateLimit(ip: string): Promise<{
   allowed: boolean;
   retryAfterSeconds?: number;
-} {
-  const now = Date.now();
-  const entry = attempts.get(ip);
-
-  // No entry or window expired → allow
-  if (!entry || now > entry.resetTime) {
+}> {
+  if (!ratelimit) {
+    if (isProd) {
+      // Fail-closed in production if uninitialized
+      return { allowed: false, retryAfterSeconds: 60 };
+    }
+    console.warn(
+      "[RateLimit] Upstash Redis credentials not configured. Skipping rate limit in development."
+    );
     return { allowed: true };
   }
 
-  // Within window and over limit → block
-  if (entry.count >= MAX_ATTEMPTS) {
-    const retryAfterSeconds = Math.ceil((entry.resetTime - now) / 1000);
+  const { remaining, reset } = await ratelimit.getRemaining(ip);
+
+  if (remaining <= 0) {
+    const retryAfterSeconds = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
     return { allowed: false, retryAfterSeconds };
   }
 
-  // Within window but under limit → allow
   return { allowed: true };
 }
 
-export function recordFailedAttempt(ip: string): void {
-  const now = Date.now();
-  const entry = attempts.get(ip);
-
-  if (!entry || now > entry.resetTime) {
-    // Start a new window
-    attempts.set(ip, { count: 1, resetTime: now + WINDOW_MS });
-  } else {
-    entry.count += 1;
-  }
+export async function recordFailedAttempt(ip: string): Promise<void> {
+  if (!ratelimit) return;
+  await ratelimit.limit(ip);
 }
 
-export function clearRateLimit(ip: string): void {
-  attempts.delete(ip);
+export async function clearRateLimit(ip: string): Promise<void> {
+  if (!ratelimit) return;
+  await ratelimit.resetUsedTokens(ip);
 }
