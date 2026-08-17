@@ -1,7 +1,14 @@
-import { prisma } from "@kissmyglam/db";
+import { prisma, Prisma } from "@kissmyglam/db";
 import { notFound } from "next/navigation";
 import { CategoryProductView } from "./CategoryProductView";
 import { Suspense } from "react";
+
+type RawProduct = Prisma.ProductGetPayload<{
+  include: {
+    subtype: { select: { slug: true } };
+    images: { where: { isPrimary: true }; take: 1 };
+  };
+}>;
 
 export default async function CategoryPage({
   params,
@@ -32,7 +39,7 @@ export default async function CategoryPage({
     })
   ]);
 
-  const products = rawProducts.map((p) => ({
+  const products = rawProducts.map((p: RawProduct) => ({
     ...p,
     price: p.price.toString(),
   }));
