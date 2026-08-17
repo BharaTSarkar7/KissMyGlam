@@ -8,3 +8,4 @@ export * from "./HeaderLogo";
 export * from "./HeaderSearch";
 export * from "./ProductImageGallery";
 export * from "./ProductDetailsAccordion";
+export * from "./LoadingDialog";
