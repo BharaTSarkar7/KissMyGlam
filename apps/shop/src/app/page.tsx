@@ -52,7 +52,7 @@ export default async function Home() {
               <Button variant="primary" className="w-full sm:w-auto">Shop The Sale</Button>
             </Link>
             <Link href="/new-ins" className="w-full sm:w-auto">
-              <Button variant="ghost" className="w-full sm:w-auto">View All Categories</Button>
+              <Button variant="ghost" className="w-full sm:w-auto !bg-bg hover:!bg-bg-alt border border-line text-ink shadow-sm">New Arrivals</Button>
             </Link>
           </div>
         </div>
