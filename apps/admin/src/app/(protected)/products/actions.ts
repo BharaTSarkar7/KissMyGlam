@@ -113,6 +113,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
           isFeatured: validated.isFeatured,
           isActive: validated.isActive,
           isSold: validated.isSold,
+          isOnSale: validated.isOnSale,
         },
       });
 
@@ -137,6 +138,7 @@ export async function upsertProduct(data: ProductFormValues, id?: string) {
           isFeatured: validated.isFeatured,
           isActive: validated.isActive,
           isSold: validated.isSold,
+          isOnSale: validated.isOnSale,
         },
       });
       productId = newProduct.id;

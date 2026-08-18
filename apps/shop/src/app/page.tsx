@@ -48,10 +48,10 @@ export default async function Home() {
             Discover the new collection. Premium materials, effortless silhouettes, and timeless designs for the modern wardrobe.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
-            <Link href="/category/dresses" className="w-full sm:w-auto">
+            <Link href="/sale" className="w-full sm:w-auto">
               <Button variant="primary" className="w-full sm:w-auto">Shop The Sale</Button>
             </Link>
-            <Link href="#categories" className="w-full sm:w-auto">
+            <Link href="/new-ins" className="w-full sm:w-auto">
               <Button variant="ghost" className="w-full sm:w-auto">View All Categories</Button>
             </Link>
           </div>

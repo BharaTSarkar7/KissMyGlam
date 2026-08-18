@@ -44,6 +44,7 @@ model Product {
   isFeatured  Boolean        @default(false)
   isActive    Boolean        @default(true)
   isSold      Boolean        @default(false)
+  isOnSale    Boolean        @default(false)
   saleRecord  SaleRecord?
   images      ProductImage[]
   createdAt   DateTime       @default(now())

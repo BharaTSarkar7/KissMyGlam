@@ -48,6 +48,8 @@ export default async function EditProductPage({
     colours: product.colours,
     isFeatured: product.isFeatured,
     isActive: product.isActive,
+    isSold: product.isSold,
+    isOnSale: product.isOnSale,
     images: product.images.map((img) => ({
       id: img.id,
       url: img.url,

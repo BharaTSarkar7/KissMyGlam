@@ -44,6 +44,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
   const [isFeatured, setIsFeatured] = useState(initialData?.isFeatured || false);
   const [isActive, setIsActive] = useState(initialData?.isActive ?? true);
   const [isSold, setIsSold] = useState(initialData?.isSold ?? false);
+  const [isOnSale, setIsOnSale] = useState(initialData?.isOnSale ?? false);
   const [images, setImages] = useState<ProductFormValues["images"]>(initialData?.images || []);
 
   // Tag inputs state
@@ -207,6 +208,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
       isFeatured,
       isActive,
       isSold,
+      isOnSale,
       images,
     };
 
@@ -502,7 +504,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
       {/* Images */}
       <div className="space-y-4">
         <h3 className="font-serif text-2xl text-ink border-t border-line pt-6">Images *</h3>
-        
+
         <div className="border-2 border-dashed border-line rounded-[14px] p-8 text-center bg-bg-alt/30 hover:bg-bg-alt/50 transition-colors relative">
           <input
             type="file"
@@ -527,7 +529,7 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
             {images.map((img, idx) => (
               <div key={idx} className={`relative group aspect-[4/5] rounded-[14px] overflow-hidden border-2 ${img.isPrimary ? 'border-ink' : 'border-transparent'}`}>
                 <Image src={img.url} alt="Preview" fill className="object-cover" />
-                
+
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                   <div className="flex justify-between">
                     {!img.isPrimary && (
@@ -568,7 +570,16 @@ export function ProductForm({ initialData, categories, subtypes }: Props) {
               onChange={(e) => setIsFeatured(e.target.checked)}
               className="w-4 h-4 text-ink rounded border-line focus:ring-ink"
             />
-            <span className="text-sm font-medium text-ink">Featured (Shows on homepage)</span>
+            <span className="text-sm font-medium text-ink">New-ins (Shows on Newinspage)</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isOnSale}
+              onChange={(e) => setIsOnSale(e.target.checked)}
+              className="w-4 h-4 text-ink rounded border-line focus:ring-ink"
+            />
+            <span className="text-sm font-medium text-ink">On Sale (Shows on Sale page)</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input

@@ -31,6 +31,7 @@ export const productSchema = z.object({
   isFeatured: z.boolean().default(false),
   isActive: z.boolean().default(true),
   isSold: z.boolean().default(false),
+  isOnSale: z.boolean().default(false),
   images: z
     .array(
       z.object({
