@@ -1,6 +1,17 @@
 "use server";
 
-import { prisma } from "@kissmyglam/db";
+import { prisma, Prisma } from "@kissmyglam/db";
+
+type SearchProduct = Prisma.ProductGetPayload<{
+  include: {
+    category: { select: { name: true } };
+    images: {
+      where: { isPrimary: true };
+      take: 1;
+      select: { url: true };
+    };
+  };
+}>;
 
 export async function searchLiveProducts(query: string) {
   if (!query || query.trim().length === 0) {
@@ -49,7 +60,7 @@ export async function searchLiveProducts(query: string) {
     },
   });
 
-  return products.map((p) => ({
+  return products.map((p: SearchProduct) => ({
     id: p.id,
     name: p.name,
     slug: p.slug,

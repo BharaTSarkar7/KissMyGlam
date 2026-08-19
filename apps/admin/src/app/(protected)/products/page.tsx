@@ -1,6 +1,21 @@
 import { prisma, Prisma } from "@kissmyglam/db";
 import { ProductList } from "./ProductList";
 
+type AdminProduct = Prisma.ProductGetPayload<{
+  include: {
+    category: { select: { name: true; slug: true } };
+    subtype: { select: { name: true } };
+    images: { where: { isPrimary: true }; take: 1; select: { url: true } };
+    saleRecord: {
+      select: {
+        payment: true;
+        boughtFor: true;
+        soldFor: true;
+      };
+    };
+  };
+}>;
+
 export default async function ProductsPage({
   searchParams,
 }: {
@@ -46,7 +61,7 @@ export default async function ProductsPage({
       : null,
   ]);
 
-  const formattedProducts = products.map((p) => ({
+  const formattedProducts = products.map((p: AdminProduct) => ({
     ...p,
     price: Number(p.price),
     saleRecord: p.saleRecord

@@ -1,4 +1,5 @@
 import { prisma } from "@kissmyglam/db";
+import type { SaleRecord } from "@kissmyglam/db";
 import { SalesLedger } from "./SalesLedger";
 
 export default async function AnalyticsPage() {
@@ -13,7 +14,7 @@ export default async function AnalyticsPage() {
   const totalExpense = expenseSetting?.value ? Number(expenseSetting.value) : 0;
 
   // Convert decimal to number for the client component
-  const formattedRecords = records.map((r) => ({
+  const formattedRecords = records.map((r: SaleRecord) => ({
     id: r.id,
     productId: r.productId,
     productName: r.productName,
