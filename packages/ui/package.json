@@ -7,8 +7,8 @@
     "lucide-react": "^0.300.0"
   },
   "peerDependencies": {
-    "react": "^18 || ^19",
-    "react-dom": "^18 || ^19",
-    "next": "^14 || ^15"
+    "next": "^14 || ^15",
+    "react": "^19.2.8",
+    "react-dom": "^18 || ^19"
   }
 }
