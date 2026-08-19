@@ -23,6 +23,12 @@
         "ADMIN_NAME"
       ]
     },
+    "@kissmyglam/db#build": {
+      "outputs": [
+        "../../node_modules/.prisma/**",
+        "../../node_modules/@prisma/client/**"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true
