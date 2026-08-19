@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "Elevate Your Everyday Style",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
