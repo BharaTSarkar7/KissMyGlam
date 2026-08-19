@@ -15,6 +15,7 @@
     "@types/bcryptjs": "^2.4.6"
   },
   "scripts": {
+    "build": "prisma generate",
     "generate": "prisma generate",
     "push": "prisma db push",
     "create-admin": "tsx create-admin.ts"
